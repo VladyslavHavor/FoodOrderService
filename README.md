@@ -20,10 +20,16 @@ Swagger-документація API
 
 Підключення до бази даних PostgreSQL через Prisma
 
-Використані технології NestJS (TypeScript) - Серверна логіка
+### Використані технології 
+
+NestJS (TypeScript) - Серверна логіка
+
 PostgreSQL - Зберігання даних
+
 JWT Auth - Авторизація користувачів
+
 Swagger - Документація API 
+
 
 
 
