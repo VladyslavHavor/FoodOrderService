@@ -48,32 +48,53 @@ prisma/
 ---
 
 ## 📡 Основні маршрути API
+
 👤 Users
 Метод	Маршрут	Опис
 POST	/users	Створити користувача
+
 GET	/users	Отримати всіх
+
 GET	/users/:id	Отримати за ID
 
 🏬 Restaurants
+
 Метод	Маршрут
+
 POST	/restaurants
+
 GET	/restaurants
+
 GET	/restaurants/:id
+
 PATCH	/restaurants/:id
+
 DELETE	/restaurants/:id
 
 🍣 Dishes
+
 Метод	Маршрут
+
 POST	/dishes
+
 GET	/dishes
+
 GET	/dishes/:id
+
 PATCH	/dishes/:id
+
 DELETE	/dishes/:id
 
 🛒 Orders
+
 Метод	Маршрут	Опис
+
 POST	/orders	Створити замовлення
+
 GET	/orders	Всі замовлення
+
 GET	/orders/:id	Отримати замовлення
+
 GET	/orders/user/:userId	Замовлення користувача
+
 PATCH	/orders/:id/status	Змінити статус
