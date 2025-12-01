@@ -47,6 +47,7 @@ src/
 
 └─ app.module.ts
 
+
 prisma/
 
 ├─ schema.prisma
