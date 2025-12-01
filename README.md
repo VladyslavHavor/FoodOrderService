@@ -29,52 +29,6 @@ Food Order Service — це REST API для платформи онлайн-за
 
 ---
 
-## 📂 Структура проекту
-
-food-order-service/
-│
-├─ prisma/
-│   ├─ migrations/
-│   ├─ prisma.module.ts
-│   ├─ prisma.service.ts
-│   └─ schema.prisma
-│
-├─ src/
-│   ├─ modules/
-│   │   ├─ users/
-│   │   │   ├─ users.controller.ts
-│   │   │   ├─ users.service.ts
-│   │   │   └─ dto/
-│   │   │
-│   │   ├─ restaurants/
-│   │   │   ├─ restaurants.controller.ts
-│   │   │   ├─ restaurants.service.ts
-│   │   │   └─ dto/
-│   │   │
-│   │   ├─ dishes/
-│   │   │   ├─ dishes.controller.ts
-│   │   │   ├─ dishes.service.ts
-│   │   │   └─ dto/
-│   │   │
-│   │   ├─ orders/
-│   │   │   ├─ orders.controller.ts
-│   │   │   ├─ orders.service.ts
-│   │   │   └─ dto/
-│   │
-│   ├─ app.controller.ts
-│   ├─ app.module.ts
-│   ├─ app.service.ts
-│   └─ main.ts
-│
-├─ .env
-├─ package.json
-├─ tsconfig.json
-├─ tsconfig.build.json
-└─ README.md
-
-
----
-
 **🚀 Основні можливості**
 
 **👤 Users**
