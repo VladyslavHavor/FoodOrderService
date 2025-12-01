@@ -32,17 +32,25 @@ Food Order Service — це REST API для платформи онлайн-за
 ## 📂 Структура проекту
 
 src/
+
 ├─ modules/
+
 │ ├─ users/
+
 │ ├─ restaurants/
+
 │ ├─ dishes/
+
 │ ├─ orders/
-│ └─ auth/ (якщо буде)
+│
 ├─ main.ts
+
 └─ app.module.ts
 
 prisma/
+
 ├─ schema.prisma
+
 └─ migrations/
 
 ---
