@@ -3,12 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './modules/users/users.module';
 import { RestaurantsModule } from './modules/restaurants/restaurants.module';
+import { PrismaModule } from '../prisma/prisma.module';
 import { DishesModule } from './modules/dishes/dishes.module';
 import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
-  imports: [UsersModule, RestaurantsModule, DishesModule, OrdersModule],
+  imports: [UsersModule, RestaurantsModule, DishesModule, OrdersModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+

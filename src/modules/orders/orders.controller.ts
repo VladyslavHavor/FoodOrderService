@@ -1,18 +1,15 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { OrdersService } from './orders.service';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { UpdateOrderStatusDto } from './dto/update-status.dto';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  create(@Body() body: {
-    userId: number;
-    restaurantId: number;
-    items: { dishId: number; quantity: number }[];
-  }) {
-    const { userId, restaurantId, items } = body;
-    return this.ordersService.createOrder(userId, restaurantId, items);
+  create(@Body() dto: CreateOrderDto) {
+    return this.ordersService.createOrder(dto.userId, dto.restaurantId, dto.items);
   }
 
   @Get()
@@ -21,7 +18,7 @@ export class OrdersController {
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string) {
+  getById(@Param('id') id: string) {
     return this.ordersService.getById(Number(id));
   }
 
@@ -30,8 +27,12 @@ export class OrdersController {
     return this.ordersService.getByUser(Number(userId));
   }
 
-  @Patch(':id/status')
-  updateStatus(@Param('id') id: string, @Body() body: { status: 'new'|'in_progress'|'delivered' }) {
-    return this.ordersService.updateStatus(Number(id), body.status);
-  }
+ @Patch(':id/status')
+updateStatus(
+  @Param('id') id: string,
+  @Body() dto: UpdateOrderStatusDto
+) {
+  return this.ordersService.updateStatus(Number(id), dto.status);
+}
+
 }

@@ -1,18 +1,51 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { CreateRestaurantDto } from './dto/create-restaurant.dto';
+import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 
 @Injectable()
 export class RestaurantsService {
-  private restaurants = [
-    { id: 1, name: 'Burger Town', category: 'Fast Food', rating: 4.6 },
-    { id: 2, name: 'Pasta House', category: 'Italian', rating: 4.8 },
-    { id: 3, name: 'Sushi Time', category: 'Japanese', rating: 4.5 },
-  ];
+  constructor(private prisma: PrismaService) {}
 
-  getAllRestaurants() {
-    return this.restaurants;
+  getAll() {
+    return this.prisma.restaurant.findMany({
+      include: { dishes: true },
+    });
   }
 
-  getRestaurantById(id: number) {
-    return this.restaurants.find(r => r.id === id);
+  async getById(id: number) {
+    const restaurant = await this.prisma.restaurant.findUnique({
+      where: { id },
+      include: { dishes: true },
+    });
+
+    if (!restaurant) {
+      throw new NotFoundException('Restaurant not found');
+    }
+
+    return restaurant;
+  }
+
+  create(dto: CreateRestaurantDto) {
+    return this.prisma.restaurant.create({
+      data: dto,
+    });
+  }
+
+  async update(id: number, dto: UpdateRestaurantDto) {
+    await this.getById(id); // якщо нема — NotFoundException
+
+    return this.prisma.restaurant.update({
+      where: { id },
+      data: dto,
+    });
+  }
+
+  async delete(id: number) {
+    await this.getById(id);
+
+    return this.prisma.restaurant.delete({
+      where: { id },
+    });
   }
 }

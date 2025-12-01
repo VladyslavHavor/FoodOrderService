@@ -1,63 +1,82 @@
-import { Injectable } from '@nestjs/common';
-import { DishesService } from '../dishes/dishes.service';
-
-export type OrderStatus = 'new' | 'in_progress' | 'delivered';
-export type OrderItem = { dishId: number; quantity: number };
-
-// 🔹 додаємо `export` перед інтерфейсом
-export interface Order {
-  id: number;
-  userId: number;
-  restaurantId: number;
-  items: OrderItem[];
-  total: number;
-  status: OrderStatus;
-  createdAt: Date;
-}
-
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { OrderStatus } from '@prisma/client';
 @Injectable()
 export class OrdersService {
-  private orders: Order[] = [];
-  private nextId = 1;
+  constructor(private prisma: PrismaService) {}
 
-  constructor(private readonly dishesService: DishesService) {}
+  async createOrder(
+    userId: number,
+    restaurantId: number,
+    items: { dishId: number; quantity: number }[],
+  ) {
+    // 1. Перевіряємо, чи існує ресторан
+    const restaurant = await this.prisma.restaurant.findUnique({
+      where: { id: restaurantId },
+    });
+    if (!restaurant) throw new NotFoundException('Restaurant not found');
 
-  createOrder(userId: number, restaurantId: number, items: OrderItem[]): Order {
-    // рахуємо суму по цінах із DishesService
-    const total = items.reduce((sum, it) => {
-      const dish = this.dishesService.getDishById(it.dishId);
-      return sum + (dish?.price ?? 0) * it.quantity;
+    // 2. Беремо всі страви
+    const dishIds = items.map((i) => i.dishId);
+
+    const dishes = await this.prisma.dish.findMany({
+      where: { id: { in: dishIds } },
+    });
+
+    if (dishes.length !== items.length)
+      throw new NotFoundException('One of the dishes does not exist');
+
+    // 3. Рахуємо total
+    const total = items.reduce((sum, i) => {
+      const dish = dishes.find((d) => d.id === i.dishId)!;
+      return sum + Number(dish.price) * i.quantity;
     }, 0);
 
-    const order: Order = {
-      id: this.nextId++,
-      userId,
-      restaurantId,
-      items,
-      total,
-      status: 'new',
-      createdAt: new Date(),
-    };
+    // 4. Створюємо order
+    const order = await this.prisma.order.create({
+      data: {
+        userId,
+        total,
+        restaurantId,
+        items: {
+          create: items.map((i) => ({
+            dishId: i.dishId,
+            quantity: i.quantity,
+          })),
+        },
+      },
+      include: {
+        items: true,
+      },
+    });
 
-    this.orders.push(order);
     return order;
   }
 
-  getAll(): Order[] {
-    return this.orders;
+  getAll() {
+    return this.prisma.order.findMany({
+      include: { items: true },
+    });
   }
 
-  getById(id: number): Order | undefined {
-    return this.orders.find(o => o.id === id);
+  getById(id: number) {
+    return this.prisma.order.findUnique({
+      where: { id },
+      include: { items: true },
+    });
   }
 
-  getByUser(userId: number): Order[] {
-    return this.orders.filter(o => o.userId === userId);
+  getByUser(userId: number) {
+    return this.prisma.order.findMany({
+      where: { userId },
+      include: { items: true },
+    });
   }
 
-  updateStatus(id: number, status: OrderStatus): Order | undefined {
-    const order = this.getById(id);
-    if (order) order.status = status;
-    return order;
-  }
+async updateStatus(id: number, status: OrderStatus) {
+  return this.prisma.order.update({
+    where: { id },
+    data: { status },
+  });
+}
 }

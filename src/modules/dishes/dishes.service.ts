@@ -1,23 +1,69 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { CreateDishDto } from './dto/create-dish.dto';
+import { UpdateDishDto } from './dto/update-dish.dto';
 
 @Injectable()
 export class DishesService {
-  private dishes = [
-    { id: 1, name: 'Cheeseburger', price: 150, restaurantId: 1 },
-    { id: 2, name: 'Big Pizza', price: 300, restaurantId: 2 },
-    { id: 3, name: 'Sushi Set', price: 250, restaurantId: 3 },
-    { id: 4, name: 'Fries', price: 70, restaurantId: 1 },
-  ];
+  constructor(private prisma: PrismaService) {}
 
-  getAllDishes() {
-    return this.dishes;
+  getAll() {
+    return this.prisma.dish.findMany({
+      include: { restaurant: true },
+    });
   }
 
-  getDishesByRestaurant(restaurantId: number) {
-    return this.dishes.filter(dish => dish.restaurantId === restaurantId);
+  async getById(id: number) {
+    const dish = await this.prisma.dish.findUnique({
+      where: { id },
+      include: { restaurant: true },
+    });
+
+    if (!dish) {
+      throw new NotFoundException('Dish not found');
+    }
+
+    return dish;
   }
 
-  getDishById(id: number) {
-    return this.dishes.find(dish => dish.id === id);
+  // Метод потрібний для OrdersService
+  async getDishById(id: number) {
+    const dish = await this.prisma.dish.findUnique({
+      where: { id },
+    });
+
+    if (!dish) {
+      throw new NotFoundException('Dish not found');
+    }
+
+    return dish;
+  }
+
+  create(dto: CreateDishDto) {
+    return this.prisma.dish.create({
+      data: {
+        name: dto.name,
+        description: dto.description,
+        price: dto.price,
+        restaurant: { connect: { id: dto.restaurantId } },
+      },
+    });
+  }
+
+  async update(id: number, dto: UpdateDishDto) {
+    await this.getById(id);
+
+    return this.prisma.dish.update({
+      where: { id },
+      data: dto,
+    });
+  }
+
+  async delete(id: number) {
+    await this.getById(id);
+
+    return this.prisma.dish.delete({
+      where: { id },
+    });
   }
 }
