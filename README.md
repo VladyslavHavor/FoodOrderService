@@ -33,38 +33,44 @@ Food Order Service — це REST API для платформи онлайн-за
 
 food-order-service/
 │
-├─ prisma/                 
-│   ├─ migrations/        
-│   ├─ prisma.module.ts  
-│   ├─ prisma.service.ts  
-│   └─ schema.prisma     
+├─ prisma/
+│   ├─ migrations/
+│   ├─ prisma.module.ts
+│   ├─ prisma.service.ts
+│   └─ schema.prisma
 │
 ├─ src/
-│   ├─ modules/            
-│   │   ├─ users/          
+│   ├─ modules/
+│   │   ├─ users/
 │   │   │   ├─ users.controller.ts
 │   │   │   ├─ users.service.ts
-│   │   │   └─ dto/        
+│   │   │   └─ dto/
 │   │   │
-│   │   ├─ restaurants/    
+│   │   ├─ restaurants/
 │   │   │   ├─ restaurants.controller.ts
 │   │   │   ├─ restaurants.service.ts
 │   │   │   └─ dto/
 │   │   │
-│   │   ├─ dishes/       
+│   │   ├─ dishes/
 │   │   │   ├─ dishes.controller.ts
 │   │   │   ├─ dishes.service.ts
 │   │   │   └─ dto/
 │   │   │
-│   │   ├─ orders/         # Модуль замовлень
+│   │   ├─ orders/
 │   │   │   ├─ orders.controller.ts
 │   │   │   ├─ orders.service.ts
 │   │   │   └─ dto/
 │   │
-│   ├─ app.controller.ts   # Кореневий контролер
-│   ├─ app.module.ts       # Головний модуль програми
-│   ├─ app.service.ts      # Базовий сервіс
-│   └─ main.ts             # Точка входу NestJS
+│   ├─ app.controller.ts
+│   ├─ app.module.ts
+│   ├─ app.service.ts
+│   └─ main.ts
+│
+├─ .env
+├─ package.json
+├─ tsconfig.json
+├─ tsconfig.build.json
+└─ README.md
 
 ---
 
