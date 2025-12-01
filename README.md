@@ -43,7 +43,7 @@ src/
 
 │ ├─ orders/
 
-├─ main.ts
+├ ├─ main.ts
 
 └─ app.module.ts
 
